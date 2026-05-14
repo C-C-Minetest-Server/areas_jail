@@ -39,6 +39,10 @@ core.register_chatcommand("jail", {
         end
         local pname, jail = params[1], params[2]
 
+        if name == pname and not core.settings:get_bool("areas_jail.allow_self_jailing", false) then
+            return false, S("You don't want to jail yourselves, right?")
+        end
+
         local player = core.get_player_by_name(pname)
         if not player then
             return false, S("Player @1 is not online.", pname)

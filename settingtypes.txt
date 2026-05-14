@@ -1,0 +1,4 @@
+# Whether to allow staffs to jail themselves
+# WARNING: Jailing results in the revocation of staff privileges. In the worst
+# case, this might require someone with shell access to fix.
+areas_jail.allow_self_jailing (Allow staffs to jail themselves) bool false
