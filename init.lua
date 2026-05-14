@@ -22,9 +22,9 @@
 areas_jail = {}
 areas_jail.internal = {}
 areas_jail.internal.logger = logging.logger("areas_jail")
-areas_jail.internal.S = minetest.get_translator("areas_jail")
+areas_jail.internal.S = core.get_translator("areas_jail")
 
-local MP = minetest.get_modpath("areas_jail")
+local MP = core.get_modpath("areas_jail")
 for _, name in ipairs({
     "storage",
     "api",

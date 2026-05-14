@@ -23,8 +23,8 @@ local _aj = areas_jail
 local _int = _aj.internal
 local logger = _int.logger:sublogger("storage")
 
-local serialize, deserialize = minetest.serialize, minetest.deserialize
-local WP = minetest.get_worldpath()
+local serialize, deserialize = core.serialize, core.deserialize
+local WP = core.get_worldpath()
 
 local save_dir = WP .. "/areas_jail.lua"
 
@@ -33,7 +33,7 @@ do
     local f, err = io.open(save_dir, "r")
     if f then
         local d = f:read("*a")
-        _aj.jail_data = minetest.deserialize(d, true)
+        _aj.jail_data = core.deserialize(d, true)
         if not _aj.jail_data then
             logger:warning(("Failed to load %s, using empty data."):format(
                 save_dir
@@ -51,17 +51,17 @@ end
 -- Save function
 function _aj.save_data()
     logger:action("Saving jail data")
-    local data = minetest.serialize(_aj.jail_data)
-    minetest.safe_file_write(save_dir, data)
+    local data = core.serialize(_aj.jail_data)
+    core.safe_file_write(save_dir, data)
 end
 
 local function loop()
     _aj.save_data()
-    minetest.after(60, loop)
+    core.after(60, loop)
 end
 
 
-minetest.after(60, loop)
-minetest.register_on_shutdown(function()
+core.after(60, loop)
+core.register_on_shutdown(function()
     _aj.save_data()
 end)

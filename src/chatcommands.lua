@@ -28,7 +28,7 @@ local S = _int.S
 
 _aj.chatcommand_privs = { ban = true, }
 
-minetest.register_chatcommand("jail", {
+core.register_chatcommand("jail", {
     description = S("Put a player into a jail"),
     params = S("<player> <jail ID>"),
     privs = _aj.chatcommand_privs,
@@ -39,7 +39,7 @@ minetest.register_chatcommand("jail", {
         end
         local pname, jail = params[1], params[2]
 
-        local player = minetest.get_player_by_name(pname)
+        local player = core.get_player_by_name(pname)
         if not player then
             return false, S("Player @1 is not online.", pname)
         end
@@ -51,33 +51,33 @@ minetest.register_chatcommand("jail", {
         logger:action(("Player %s put %s into jail %s."):format(name, pname, jail))
         _aj.put_into_jail(player, jail)
 
-        minetest.chat_send_player(pname,
+        core.chat_send_player(pname,
             S("You have been jailed. Reflect on your mistakes, and ask moderators for more information."))
 
         return true, S("Put @1 into jail @2.", pname, jail)
     end,
 })
 
-minetest.register_chatcommand("unjail", {
+core.register_chatcommand("unjail", {
     description = S("Move a player out of jail"),
     params = S("<player>"),
     privs = _aj.chatcommand_privs,
     func = function(name, param)
-        local player = minetest.get_player_by_name(param)
+        local player = core.get_player_by_name(param)
         if not player then
             return false, S("Player @1 is not online.")
         end
 
         logger:action(("Player %s moved %s out of jail."):format(name, param))
 
-        minetest.chat_send_player(param,
+        core.chat_send_player(param,
             S("You have been moved out of jail. Do not make the same mistake again."))
 
         local spawn_pos = _aj.find_restore_pos(player)
         if spawn_pos then
             player:set_pos(spawn_pos)
         else
-            minetest.chat_send_player(param,
+            core.chat_send_player(param,
                 S("Failed to reset your position. Try using /home to go back."))
         end
 
@@ -89,7 +89,7 @@ minetest.register_chatcommand("unjail", {
     end,
 })
 
-minetest.register_chatcommand("jailset", {
+core.register_chatcommand("jailset", {
     description = S("Set or add the properties of a jail"),
     params = S("<jail ID> <area IDs> <spawnpoint>"),
     privs = _aj.chatcommand_privs,
@@ -110,7 +110,7 @@ minetest.register_chatcommand("jailset", {
             area_ids[i] = id
         end
 
-        local spawnpoint = minetest.string_to_pos(spawnpoint_s)
+        local spawnpoint = core.string_to_pos(spawnpoint_s)
         if not spawnpoint then
             return false, S("Invalid usage, see /help @1", "jailset")
         end
@@ -128,7 +128,7 @@ minetest.register_chatcommand("jailset", {
     end
 })
 
-minetest.register_chatcommand("jailunset", {
+core.register_chatcommand("jailunset", {
     description = S("Unset a jail"),
     params = S("<jail ID>"),
     privs = _aj.chatcommand_privs,
@@ -138,7 +138,7 @@ minetest.register_chatcommand("jailunset", {
     end,
 })
 
-minetest.register_chatcommand("jaillist", {
+core.register_chatcommand("jaillist", {
     description = S("List all jails"),
     privs = _aj.chatcommand_privs,
     func = function(name, param)
@@ -146,7 +146,7 @@ minetest.register_chatcommand("jaillist", {
         for id, data in pairs(_data) do
             rstr = rstr .. "\n" .. id .. " " ..
                 table.concat(data.areas, ",") .. " " ..
-                minetest.pos_to_string(data.spawnpoint)
+                core.pos_to_string(data.spawnpoint)
         end
         rstr = rstr .. "\n-- " .. S("Jail list end") .. " --"
 
